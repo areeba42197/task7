@@ -1,0 +1,94 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+
+const int NUM_CHARITIES = 3;
+
+void displayCharities(const std::string charities[]) {
+    std::cout << "Choose a charity:\n";
+    for (int i = 0; i < NUM_CHARITIES; ++i) {
+        std::cout << i + 1 << ". " << charities[i] << std::endl;
+    }
+}
+
+int getCharityChoice() {
+    int choice;
+    std::cout << "Enter your choice (1, 2, or 3): ";
+    std::cin >> choice;
+
+    // Validate user input
+    while (choice < 1 || choice > 3) {
+        std::cout << "Invalid choice. Please enter 1, 2, or 3: ";
+        std::cin >> choice;
+    }
+
+    return choice;
+}
+
+double getShoppingBill() {
+    double bill;
+    std::cout << "Enter the shopping bill amount: $";
+    std::cin >> bill;
+
+    // Validate user input
+    while (bill < 0) {
+        std::cout << "Invalid amount. Please enter a non-negative value: $";
+        std::cin >> bill;
+    }
+
+    return bill;
+}
+
+void processDonation(double& total, const std::string& charityName, double donation) {
+    total += donation;
+    std::cout << "Donated $" << std::fixed << std::setprecision(2) << donation
+              << " to " << charityName << " successfully.\n";
+}
+
+void displayTotals(const std::string charities[], const double totals[]) {
+    std::cout << "\nCharity Totals:\n";
+    for (int i = 0; i < NUM_CHARITIES; ++i) {
+        std::cout << charities[i] << ": $" << std::fixed << std::setprecision(2) << totals[i] << std::endl;
+    }
+}
+
+int main() {
+    std::string charities[NUM_CHARITIES];
+    double totals[NUM_CHARITIES] = {0};
+
+    // Task 1 - Set up the donation system
+    for (int i = 0; i < NUM_CHARITIES; ++i) {
+        std::cout << "Enter the name of charity " << i + 1 << ": ";
+        std::cin >> charities[i];
+    }
+
+    // Task 2 - Record and total each donation
+    int customerCount = 0;
+    while (true) {
+        displayCharities(charities);
+
+        int choice = getCharityChoice();
+        if (choice == -1) {
+            // Task 3 - Show the totals so far
+            displayTotals(charities, totals);
+            break;
+        }
+
+        double bill = getShoppingBill();
+        double donation = 0.01 * bill;
+
+        processDonation(totals[choice - 1], charities[choice - 1], donation);
+        ++customerCount;
+    }
+
+    // Calculate and display grand total
+    double grandTotal = 0;
+    for (int i = 0; i < NUM_CHARITIES; ++i) {
+        grandTotal += totals[i];
+    }
+
+    std::cout << "GRAND TOTAL DONATED TO CHARITY: $" << std::fixed << std::setprecision(2) << grandTotal << std::endl;
+
+    return 0;
+}
+
